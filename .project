@@ -3,6 +3,7 @@
 	<name>spring-test-20240618</name>
 	<comment></comment>
 	<projects>
+		<project>Servers</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

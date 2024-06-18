@@ -16,12 +16,14 @@ public class MemberDao {
 	
 	//회원가입, 회원탈퇴, 회원리스트조회, 회원검색, 회원정보수정
 	//1. 회원가입
-	public void joinMember(String mid, String mpw, String mname, String memail) {  //회원 가입 메소드
+	public int joinMember(String mid, String mpw, String mname, String memail) {  //회원 가입 메소드
 		
 		String sql = "INSERT INTO members(mid,mpw,mname,memail) VALUES(?,?,?,?)";
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		
+		int success = 0;
 		
 		try {
 			Class.forName(driverName);
@@ -33,7 +35,7 @@ public class MemberDao {
 			pstmt.setString(3, mname);
 			pstmt.setString(4, memail);
 			
-			pstmt.executeUpdate();
+			success = pstmt.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,6 +53,7 @@ public class MemberDao {
 			}
 			
 		}
+		return success;
 		
 	}
 	
