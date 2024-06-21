@@ -6,10 +6,13 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kjhe1234.jdbc.command.MdeleteCommand;
+import com.kjhe1234.jdbc.command.MjoinCommand;
 import com.kjhe1234.jdbc.dao.MemberDao;
 import com.kjhe1234.jdbc.dto.MemberDto;
 
@@ -53,34 +56,60 @@ public class JdbcController {
 	@RequestMapping(value = "/joinOk")
 	public String joinOk(HttpServletRequest request, Model model) {
 		
-		try {
-			request.setCharacterEncoding("utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		model.addAttribute("request", request);
+		MjoinCommand command = new MjoinCommand();
+		int success = command.execute(model);
 		
-		String mid =request.getParameter("mid");
-		String mpw =request.getParameter("mpw");
-		String mname =request.getParameter("mname");
-		String memail =request.getParameter("memail");
+//		String mid =request.getParameter("mid");
+//		String mpw =request.getParameter("mpw");
+//		String mname =request.getParameter("mname");
+//		String memail =request.getParameter("memail");
 		
-		MemberDao memberDao = new MemberDao();
-		int success = memberDao.joinMember(mid, mpw, mname, memail);
+//		MemberDao memberDao = new MemberDao();
+//		int success = memberDao.joinMember(mid, mpw, mname, memail);
 		//success 값이 1이면 sql문 실행 성공 아니면 실패
 		
 		if(success ==1) {  // 회원 가입 성공
 			
-			model.addAttribute("mid", mid);
-			model.addAttribute("mname", mname);
+			model.addAttribute("mid", request.getParameter("mid"));
+			model.addAttribute("mname", request.getParameter("mname"));
 			
 			return "joinOk";
 			
 		} else {
 			model.addAttribute("error", "회원 가입에 실패하셨습니다.");
-			return "redirect:join";
+			//return "redirect:join";
+			return "join";
+		}
+	
+	}
+	
+	@RequestMapping(value = "/delete")
+	public String delete() {
+		return "delete";
+	}
+	
+	@RequestMapping(value = "/deleteOk")
+	public String deleteOk(HttpServletRequest request, Model model) {
+		
+		model.addAttribute("request", request);
+		
+		MdeleteCommand command = new MdeleteCommand();
+		int success = command.execute(model);
+		
+		if(success == 1) {//회원 탈퇴 성공
+			
+			model.addAttribute("message", "회원 탈퇴 성공! 안녕히가세요!");
+			
+		} else { //회원 탈퇴 실패
+			
+			model.addAttribute("message", "회원 탈퇴 실패! 다시확인해 주세요!");
+			
 		}
 		
+		return "deleteOk";
 	}
+	
 	
 	
 
