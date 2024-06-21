@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kjhe1234.jdbc.command.MCommand;
+import com.kjhe1234.jdbc.command.MSearchCommand;
 import com.kjhe1234.jdbc.command.MdeleteCommand;
 import com.kjhe1234.jdbc.command.MjoinCommand;
 import com.kjhe1234.jdbc.dao.MemberDao;
@@ -18,6 +20,8 @@ import com.kjhe1234.jdbc.dto.MemberDto;
 
 @Controller
 public class JdbcController {
+	
+	MCommand command = null;
 	
 	@RequestMapping(value = "/test")
 	public void test() {
@@ -57,7 +61,7 @@ public class JdbcController {
 	public String joinOk(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("request", request);
-		MjoinCommand command = new MjoinCommand();
+		command = new MjoinCommand();
 		int success = command.execute(model);
 		
 //		String mid =request.getParameter("mid");
@@ -94,7 +98,7 @@ public class JdbcController {
 		
 		model.addAttribute("request", request);
 		
-		MdeleteCommand command = new MdeleteCommand();
+		command = new MdeleteCommand();
 		int success = command.execute(model);
 		
 		if(success == 1) {//회원 탈퇴 성공
@@ -108,6 +112,21 @@ public class JdbcController {
 		}
 		
 		return "deleteOk";
+	}
+	
+	@RequestMapping(value = "/search")
+	public String search() {
+		return "search";
+	}
+	
+	@RequestMapping(value = "/SearchOk")
+	public String searchOk(HttpServletRequest request, Model model) {
+		model.addAttribute("request", request);
+		
+		command = new MSearchCommand();
+		command.execute(model);
+
+		return "SearchOk";
 	}
 	
 	
